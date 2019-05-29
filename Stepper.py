@@ -35,15 +35,17 @@ class Stepper:
         # Initialize all to 0
         self.reset()
         
-    def step(self, count, direction=1):
+    def step(self, count, direction=1, delay=None):
         """Rotate count steps. direction = -1 means backwards"""
+        if delay == None:
+            delay = self.delay
         for x in range(count):
             for bit in self.mode[::direction]:
                 self.pin1(bit[0])
                 self.pin2(bit[1])
                 self.pin3(bit[2])
                 self.pin4(bit[3])
-                time.sleep_ms(self.delay)
+                time.sleep_ms(delay)
         self.reset()
     def angle(self, r, direction=1):
     	self.step(int(self.FULL_ROTATION * r / 360), direction)
