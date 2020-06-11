@@ -37,6 +37,9 @@ class Stepper:
         
     def step(self, count, direction=1):
         """Rotate count steps. direction = -1 means backwards"""
+        if count<0:
+            direction = -1
+            count = -count
         for x in range(count):
             for bit in self.mode[::direction]:
                 self.pin1(bit[0])
