@@ -2,7 +2,11 @@ import time
 
 # only test for uln2003
 class Stepper:
-    FULL_ROTATION = int(4075.7728395061727 / 8) # http://www.jangeox.be/2013/10/stepper-motor-28byj-48_25.html
+    # spec: http://www.geeetech.com/wiki/index.php/Stepper_Motor_5V_4-Phase_5-Wire_%26_ULN2003_Driver_Board_for_Arduino#Interfacing_circuits
+    # from spec- Speed Variation Ratio ：1/64, the ratio between input wheel to output wheel is 64
+    # from the spec (5.625'/64) angle for one HALF_STEP, and for one internal cycle you need 8 HALF_STEPs
+    # so for 360' is: (360/(5.625'/64))/8=512(before any step) and multiply it by one cycle(8 HALF_STEPs or 4 FULL_STEPs)
+    FULL_ROTATION = 512 # int(4075.7728395061727 / 8) # http://www.jangeox.be/2013/10/stepper-motor-28byj-48_25.html
 
     HALF_STEP = [
         [0, 0, 0, 1],
@@ -45,8 +49,14 @@ class Stepper:
                 self.pin4(bit[3])
                 time.sleep_ms(self.delay)
         self.reset()
-    def angle(self, r, direction=1):
-    	self.step(int(self.FULL_ROTATION * r / 360), direction)
+	
+    # this is added angle not absolute- call it addAngle()
+    # the direction can calculate if the angle is negative, no need this input
+    def addAngle(self, angle):
+	if angle < 0 : direction = -1
+        if angle >= 0 : direction = 1
+        self.step(int(self.FULL_ROTATION * abs(angle) / 360), direction)
+	
     def reset(self):
         # Reset to 0, no holding, these are geared, you can't move them
         self.pin1(0) 
