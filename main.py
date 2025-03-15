@@ -1,13 +1,15 @@
-import Stepper
-from machine import Pin
-'''
-IN1 -->  16
-IN2 -->  17
-IN3 -->  5
-IN4 -->  18
-'''
-s1 = Stepper.create(Pin(16,Pin.OUT),Pin(17,Pin.OUT),Pin(5,Pin.OUT),Pin(18,Pin.OUT), delay=2)
-s1.step(100)
-s1.step(100,-1)
-s1.angle(180)
-s1.angle(360,-1)
+from stepper import Stepper
+
+in1 = 16
+in2 = 17
+in3 = 5
+in4 = 18
+delay = 2
+mode = 1 # 0 for half step, 1 for full step
+
+def main() -> None:
+    s1 = Stepper(in1, in2, in3, in4, delay, mode)
+    s1.step(100)
+    s1.step(100,-1)
+    s1.angle(180)
+    s1.angle(360,-1)
